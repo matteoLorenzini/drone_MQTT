@@ -1,0 +1,10 @@
+FROM python:3.6-alpine3.9
+
+# Install dependencies
+RUN pip3 install paho-mqtt opencv-python
+
+# Copy script
+COPY viewer.py /home/viewer.py 
+
+# Expose command
+CMD python /home/viewer.py

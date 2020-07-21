@@ -1,0 +1,12 @@
+FROM node:current-alpine3.12
+
+# Copy script
+COPY drone_app /drone_app
+
+# Install dependencies
+WORKDIR /drone_app
+
+RUN npm install
+
+# Expose command
+CMD npm start
