@@ -1,10 +1,12 @@
 const mqtt = require('mqtt');
+var requestify = require('requestify');
 
 class MqttHandler {
   constructor() {
     this.mqttClient = null;
-    this.host = 'http://localhost:1883';
-    
+    this.host = 'http://10.0.0.1:1883';
+
+    this.info_track_weather = []        // List of dictionaries {'position': kml, 'weather': json_weatherbit.io}
   }
   
   connect() {
@@ -23,11 +25,17 @@ class MqttHandler {
     });
 
     // mqtt subscriptions
-    this.mqttClient.subscribe('mytopic', {qos: 0});
+    this.mqttClient.subscribe('sensor/gps', {qos: 0});        // Subscribe to drone GPS position
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
-      console.log(message.toString());
+      console.log(topic + ": " + message.toString());
+      
+      if (topic == 'sensor/gps') {
+        // Call to json_weatherbit.io 
+        
+        // this.info_track_weather.push({'position': tokml(message), 'weather': w})
+      }
     });
 
     this.mqttClient.on('close', () => {

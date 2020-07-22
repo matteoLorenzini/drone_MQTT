@@ -1,3 +1,4 @@
 1) Why "Containernet.addDockerHost()" blocks the system when using our docker images drone/mqtt? 
 2) Why it is not necessary to expose the ports to access the mqtt broker? When running the 
 mqtt broker container outside mininet the ports must be opened to access it. 
+3) Why adding connection switch2-switch3 makes everything unreachable?

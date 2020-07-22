@@ -1,5 +1,10 @@
 import paho.mqtt.client as mqtt
+
 from argparse import ArgumentParser
+from datetime import datetime
+from random import uniform
+from time import sleep
+from json import dumps
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -17,19 +22,59 @@ def main():
     # Parse arguments
     parser = ArgumentParser(description="Drone script. Connect to the MQTT broker and send position and sensor data")
     parser.add_argument('--ip', help='IP of the MQTT broker' ,required=True)
-    parser.add_argument('--port', help='Port of the MQTT broker', default=1883)
+    parser.add_argument('--port', help='Port of the MQTT broker', type=int, default=1883)
+    parser.add_argument('--freq', help='Update frequency, in microseconds', type=int, default=15000)
+    parser.add_argument('--it', help='Number of iterations', type=int, default=100)
+    parser.add_argument('--lon', help='Starting longitude', type=float, default=0.0)
+    parser.add_argument('--lat', help='Starting latitude', type=float, default=0.0)
+    parser.add_argument('--debug', help="Debug mode. Print extra informations", action='store_true')
     args = parser.parse_args()
 
-    # Connect to the MQTT broker
+    ''' ------------------------------------------------------------------------------------
+    Connect to the MQTT broker
+    '''
+    # Try connection
     client = mqtt.Client()
-    client.connect(args.ip, int(args.port), 60)
+    client.connect(args.ip, args.port, 60)
     
     # Set callback functions
     client.on_connect = on_connect
     client.on_message = on_message
 
-    # Loop function - Change with the code sending sensor data
-    client.loop_forever()
+    # Loop function to make the client listen in the background
+    client.loop_start()
+
+    ''' -------------------------------------------------------------------------------------
+    Main simulation loop
+    '''
+    prev_longitude, prev_latitude = args.lon, args.lat
+    for n in range(0, args.it):
+        start_t = datetime.now()
+        
+        # Simulate GPS: get longitude and latitude and publish them (kml format)
+        longitude = prev_longitude + uniform(-1,1)
+        latitude = prev_latitude + uniform(-1,1)
+        coordinates = []
+        coordinates.append(longitude)
+        coordinates.append(latitude)
+        # client.publish("sensor/gps", dumps({'name': n, 'lon': longitude, 'lat': latitude}))
+        client.publish("sensor/gps", dumps({'type': 'Point', 'coordinates': coordinates}))
+        if args.debug:
+            print('GPS position emitted: ({}, ({}, {}))'.format(n, longitude, latitude))
+
+        prev_longitude = longitude
+        prev_latitude = latitude
+
+        end_t = datetime.now()
+
+        # Sleep if elapsed time bigger than the target frequency
+        elapsed = (end_t - start_t).microseconds
+        if elapsed < args.freq:
+            sleep((args.freq - elapsed) / float(1e6))                               # Convert microseconds to seconds
+
+    # Stop client listening loop
+    client.loop_stop()
+    client.disconnect()
 
 
 if __name__ == '__main__':
