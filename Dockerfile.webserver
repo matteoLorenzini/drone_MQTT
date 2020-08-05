@@ -1,10 +1,10 @@
 FROM node:current-alpine3.12
 
 # Copy script
-COPY drone_app /drone_app
+COPY webserver /webserver
 
 # Install dependencies
-WORKDIR /drone_app
+WORKDIR /webserver
 
 RUN npm install
 
