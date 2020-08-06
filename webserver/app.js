@@ -35,15 +35,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.get('/drone', function(req, res, next) {
+    res.render('drone', {
+        title: 'drone',
+        message: (mqttClient.drone_gps_json)
+    });
+})
 //app.use('/weather', usersRouter);
 //app.use('/sendMqtt', mqttRouter);
-app.get('/weather', function(req, res, next) {
-        console.log('router' + mqttClient.json_log);
-        res.render('weather', {
-            title: 'weather',
-            message: (mqttClient.json_log)
-        });
-    })
+
     // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));

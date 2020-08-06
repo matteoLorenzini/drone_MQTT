@@ -2,53 +2,48 @@ const mqtt = require('mqtt');
 const fs = require('fs')
 var requestify = require('requestify');
 
-
-
 class MqttHandler {
-
     constructor() {
         this.mqttClient = null;
         this.host = 'http://10.0.0.1:1883';
+        this.drone_gps_json = [];           // [{'type': string, 'coordinates': [float]}]
 
         this.info_track_weather = [] // List of dictionaries {'position': kml, 'weather': json_weatherbit.io}
-        this.json_log = [];
         
     }
 
     connect() {
-
-        
-
+        // Connect to the mqtt server
         this.mqttClient = mqtt.connect(this.host);
 
-        // Mqtt error calback
-        this.mqttClient.on('error', (err) => {
+        // Set callbacks
+        this.mqttClient.on('error', (err) => {                      // Error callback
             console.log(err);
             this.mqttClient.end();
         });
-
-        // Connection callback
-        this.mqttClient.on('connect', () => {
+        this.mqttClient.on('connect', () => {                       // Connection callback
             console.log(`mqtt client connected`);
         });
-
+        this.mqttClient.on('close', () => {                         // Close connection callback
+            console.log(`mqtt client disconnected`);
+        });    
+        this.mqttClient.on('message', (topic, message) => {         // Message callback
+            if (topic == 'sensor/gps') {
+                this.drone_gps_json.push(message.toString())
+            }
+        });
+               
         // mqtt subscriptions
-        this.mqttClient.subscribe('sensor/gps', {
+        this.mqttClient.subscribe('sensor/gps', {                   // Subscribe to drone position 
             qos: 0
-        }); // Subscribe to drone GPS position
+        }); 
 
+          
+        // OLD CODE ---------------------------------------------------------------------------
         // When a message arrives, console.log it
-        this.mqttClient.on('message', function(topic, message) {
-
-
+        /*this.mqttClient.on('message', function(topic, message) {
             this.json_log.push((topic + ": " + message.toString()));
-
             console.log(this.json_log.length)
-
-           
-
-            
-            /*
 
             if (topic == 'sensor/gps') {
                 // Call to json_weatherbit.io
@@ -62,9 +57,7 @@ class MqttHandler {
 
                 })
                 
-
                 const fs = require('fs');
-
                 // create a JSON object
                 const sensor_drone = {
                     json_log
@@ -82,17 +75,14 @@ class MqttHandler {
                 });
 
             }
-            */
-        });
-
-        this.mqttClient.on('close', () => {
-            console.log(`mqtt client disconnected`);
-        });
+            
+        });*/
+        // OLD CODE ---------------------------------------------------------------------------
     }
 
-    // Sends a mqtt message to topic: mytopic
-    sendMessage(message) {
-        this.mqttClient.publish('mytopic', message);
+    // Sends a mqtt message
+    sendMessage(topic, message) {
+        this.mqttClient.publish(topic, message);
     }
 }
 

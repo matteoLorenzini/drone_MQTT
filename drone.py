@@ -51,13 +51,9 @@ def main():
     for n in range(0, args.it):
         start_t = datetime.now()
         
-        # Simulate GPS: get longitude and latitude and publish them (kml format)
-        longitude = prev_longitude + uniform(-1,1)
-        latitude = prev_latitude + uniform(-1,1)
-        coordinates = []
-        coordinates.append(longitude)
-        coordinates.append(latitude)
-        # client.publish("sensor/gps", dumps({'name': n, 'lon': longitude, 'lat': latitude}))
+        # Simulate GPS: get new longitude and latitude and publish them (kml format) 
+        longitude, latitude = prev_longitude + uniform(-1,1), prev_latitude + uniform(-1,1)
+        coordinates = [longitude, latitude]
         client.publish("sensor/gps", dumps({'type': 'Point', 'coordinates': coordinates}))
         if args.debug:
             print('GPS position emitted: ({}, ({}, {}))'.format(n, longitude, latitude))
