@@ -2,4 +2,6 @@ html
 	head
 		title= title
 	body
-		h1= message
+		
+		each ping,index in message
+			p #{ping.type} Nr: #{index} Value: #{ping.coordinates}

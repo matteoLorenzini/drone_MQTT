@@ -36,10 +36,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.get('/drone', function(req, res, next) {
-    res.render('drone', {
+    //console.log(mqttClient.drone_gps_json)
+    res.render(
+        'drone', {
         title: 'drone',
         message: (mqttClient.drone_gps_json)
     });
+    console.log(mqttClient.drone_gps_json)
 })
 //app.use('/weather', usersRouter);
 //app.use('/sendMqtt', mqttRouter);

@@ -6,6 +6,7 @@ class MqttHandler {
     constructor() {
         this.mqttClient = null;
         this.host = 'http://10.0.0.1:1883';
+        
         this.drone_gps_json = [];           // [{'type': string, 'coordinates': [float]}]
 
         this.info_track_weather = [] // List of dictionaries {'position': kml, 'weather': json_weatherbit.io}
@@ -29,7 +30,8 @@ class MqttHandler {
         });    
         this.mqttClient.on('message', (topic, message) => {         // Message callback
             if (topic == 'sensor/gps') {
-                this.drone_gps_json.push(message.toString())
+                this.drone_gps_json.push(JSON.parse(message))
+            
             }
         });
                
