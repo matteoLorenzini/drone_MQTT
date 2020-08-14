@@ -1,6 +1,7 @@
 const mqtt = require('mqtt');
 const fs = require('fs')
 var requestify = require('requestify');
+var XMLBuilder = require('xmlbuilder');
 
 class MqttHandler {
     constructor() {
@@ -31,7 +32,6 @@ class MqttHandler {
         this.mqttClient.on('message', (topic, message) => {         // Message callback
             if (topic == 'sensor/gps') {
                 this.drone_gps_json.push(JSON.parse(message))
-            
             }
         });
                
@@ -39,52 +39,28 @@ class MqttHandler {
         this.mqttClient.subscribe('sensor/gps', {                   // Subscribe to drone position 
             qos: 0
         }); 
-
-          
-        // OLD CODE ---------------------------------------------------------------------------
-        // When a message arrives, console.log it
-        /*this.mqttClient.on('message', function(topic, message) {
-            this.json_log.push((topic + ": " + message.toString()));
-            console.log(this.json_log.length)
-
-            if (topic == 'sensor/gps') {
-                // Call to json_weatherbit.io
-                // this.info_track_weather.push({'position': tokml(message), 'weather': w})
-                /*
-                requestify.get('https://api.weatherbit.io/v2.0/current?city=Trento,TN&key=245ea69ec9a14549ae68a8c0371e5eb4').then(function(response) {
-                  var weather_log =[];
-                  var weather_json = JSON.parse(response.body)
-                  weather_log.push((weather_json.data[0].temp));
-                  console.log(weather_log)
-
-                })
-                
-                const fs = require('fs');
-                // create a JSON object
-                const sensor_drone = {
-                    json_log
-                };
-
-                // convert JSON object to string
-                const data = JSON.stringify(sensor_drone);
-
-                // write JSON string to a file
-                fs.writeFile('user.json', data, (err) => {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log("JSON data is saved.");
-                });
-
-            }
-            
-        });*/
-        // OLD CODE ---------------------------------------------------------------------------
     }
 
     // Sends a mqtt message
     sendMessage(topic, message) {
         this.mqttClient.publish(topic, message);
+    }
+
+    // Generate KML document
+    generateKML() {
+        let root = XMLBuilder.create('kml');
+        root.att('xmlns', "http://www.opengis.net/kml/2.2");
+        
+        this.drone_gps_json.forEach(function(item, index) {
+            console.log(index);
+            let placemark = root.ele("Placemark");
+            placemark.ele("name", index);
+
+            let point = placemark.ele("Point");
+            point.ele("coordinates", item['coordinates'][0] + "," + item['coordinates'][1] + ",0");
+        });
+        
+        return root.end({pretty: true});
     }
 }
 

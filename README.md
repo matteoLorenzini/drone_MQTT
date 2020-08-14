@@ -6,20 +6,18 @@ These factors can be detected and monitored continuously by using specific senso
 The goal of this project is to simulate a real time data transfer system able to read and visualize the data from three sensors: GPS position, to track the position of the drone on a certain 2D space, the wind speed to have a real time overview about the flight conditions and the temperature to monitor the operating temperature range.
 
 ```text
-h1: MQTT broker (Eclipse Mosquitto)                     10.0.0.1        
-    - Listens to the port 1883
-    - Manages the communication between the h2 and h3
+h1: MQTT broker (Eclipse Mosquitto)                     10.0.0.1:1883        
+    - Manages the communication between h2 and h3
 
-h2: Webserver (Node js)                                 10.0.0.2        
+h2: Webserver (Node js)                                 10.0.0.2:3000        
     - Collects the drone position and weather information
     - Publishes them in HTML 
-    - Generates the final .kml file of the trajectory
+    - Generates the .kml file of the trajectory
 
 h3: Drone (Python3)                                     10.0.0.3
-    - Simulates GPS trajectory
-    - Publishes its current position
+    - Simulates and publish the GPS trajectory
 
-h4: client/viewer (Curl/Links)                          10.0.0.4 
+h4: Client (Curl/Wget)                                 10.0.0.4 
     - Visualises the output of the webserver (h2)       
 ```
 ```text
@@ -31,9 +29,13 @@ h1  --10Mbps--  s1  --10Mbps--  s2  --10Mbps--  h2
 ## How to run ##
 1. Start mininet and docker containers:
     ```bash
-    $ sudo python3 topology.py
+    sudo python3 topology.py
     ```
-2. From h4 (Xterm) query the webserver to see the drone output (not working now)
+2. From h4 (Xterm) use the links web browser to see the drone trajectory: 
     ```bash
-    $ curl 10.0.0.2/drone
+    links 10.0.0.2:3000/drone
+    ```
+    or to download in .kml format:
+    ```bash
+    wget 10.0.0.2:3000/kml
     ```

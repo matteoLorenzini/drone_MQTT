@@ -53,7 +53,7 @@ if __name__ == "__main__":
     srv1 = mgr.addContainer("srv1", "mqttServer", "eclipse-mosquitto", "", docker_args={})
     srv2 = mgr.addContainer("srv2", "webServer", "webserver", "", docker_args={})
     srv3 = mgr.addContainer("srv3", "drone", "drone", "python /home/drone.py --ip 10.0.0.1 --port 1883 --debug", docker_args={})
-    srv4 = mgr.addContainer("srv4", "client", "dev_test", "bash", docker_args={})
+    srv4 = mgr.addContainer("srv4", "client", "client", "bash", docker_args={})
     
     spawnXtermDocker("srv4")
     CLI(net)

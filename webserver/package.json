@@ -16,6 +16,7 @@
     "mqtt": "^4.1.0",
     "requestify": "^0.2.5",
     "requests": "^0.3.0",
-    "xmlhttprequest":"^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "xmlbuilder": "15.1.1"
   }
 }
