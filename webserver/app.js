@@ -38,7 +38,6 @@ app.get('/drone', function(req, res, next) {                        // Display d
 });                                 
 app.get('/kml', function(req, res, next) {                                  // Download drone trajectory file in kml format              
     // Create trajectory file
-    // let data = JSON.stringify(mqttClient.drone_gps_json);                // TODO: generate kml data
     fs.writeFileSync('/tmp/trajectory.kml', mqttClient.generateKML());
     
     // Download it

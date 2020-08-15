@@ -1,5 +1,4 @@
 const mqtt = require('mqtt');
-const fs = require('fs')
 var requestify = require('requestify');
 var XMLBuilder = require('xmlbuilder');
 
