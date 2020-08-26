@@ -1,0 +1,2 @@
+# Force lf endings if repository cloned on Windows
+*.txt text eol=lf 

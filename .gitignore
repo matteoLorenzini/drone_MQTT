@@ -1,1 +1,5 @@
+# Ignore npm modules
 node_modules/
+
+# Ignore python generated files
+**/*.pyc

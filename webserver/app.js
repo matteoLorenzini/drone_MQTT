@@ -33,7 +33,7 @@ app.use('/', indexRouter);                                          // Index pag
 app.get('/drone', function(req, res, next) {                        // Display drone positions
     res.render('drone', {
         title: 'drone',
-        message: (mqttClient.drone_gps_json)
+        message: (mqttClient.drone_sensor_json)
     });
 });                                 
 app.get('/kml', function(req, res, next) {                                  // Download drone trajectory file in kml format              

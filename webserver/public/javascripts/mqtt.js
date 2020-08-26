@@ -7,10 +7,7 @@ class MqttHandler {
         this.mqttClient = null;
         this.host = 'http://10.0.0.1:1883';
         
-        this.drone_gps_json = [];           // [{'type': string, 'coordinates': [float]}]
-
-        this.info_track_weather = [] // List of dictionaries {'position': kml, 'weather': json_weatherbit.io}
-        
+        this.drone_sensor_json = [];        // ['gps': {'type': string, 'coordinates': [float, float]}, 'wind': float, 'temp' : float]        
     }
 
     connect() {
@@ -29,13 +26,13 @@ class MqttHandler {
             console.log(`mqtt client disconnected`);
         });    
         this.mqttClient.on('message', (topic, message) => {         // Message callback
-            if (topic == 'sensor/gps') {
-                this.drone_gps_json.push(JSON.parse(message))
+            if (topic == 'sensor') {
+                this.drone_sensor_json.push(JSON.parse(message))
             }
         });
                
         // mqtt subscriptions
-        this.mqttClient.subscribe('sensor/gps', {                   // Subscribe to drone position 
+        this.mqttClient.subscribe('sensor', {                       // Subscribe to drone position 
             qos: 0
         }); 
     }
@@ -50,13 +47,13 @@ class MqttHandler {
         let root = XMLBuilder.create('kml');
         root.att('xmlns', "http://www.opengis.net/kml/2.2");
         
-        this.drone_gps_json.forEach(function(item, index) {
+        this.drone_sensor_json.forEach(function(item, index) {
             console.log(index);
             let placemark = root.ele("Placemark");
             placemark.ele("name", index);
 
             let point = placemark.ele("Point");
-            point.ele("coordinates", item['coordinates'][0] + "," + item['coordinates'][1] + ",0");
+            point.ele("coordinates", item['gps']['coordinates'][0] + "," + item['gps']['coordinates'][1] + ",0");
         });
         
         return root.end({pretty: true});
