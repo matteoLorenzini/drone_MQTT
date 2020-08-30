@@ -2,6 +2,6 @@ html
 	head
 		title= title
 	body
-		
+
 		each ping,index in message
-			p #{ping.type} Nr: #{index} Value: #{ping.gps.coordinates}
+			p Nr: #{index} Coordinates: #{ping.gps.coordinates} Wind Speed: #{ping.wind} Temperature: #{ping.temperature}
