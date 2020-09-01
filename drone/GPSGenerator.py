@@ -19,8 +19,8 @@ class GPSGenerator:
         ''' Class constructor. 
 
             Parameters:
-                start_pos ([float,float])    : initial GPS coordinates
-                target_pos ([float,float])   : target GPS coordinates
+                start_pos ([float,float])    : initial GPS coordinates [latitude, longitude]
+                target_pos ([float,float])   : target GPS coordinates [latitude, longitude]
         '''
         self.start_pos = start_pos                                      # Starting GPS coordinates
         self.target_pos = target_pos                                    # Target GPS coordinates

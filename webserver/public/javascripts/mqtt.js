@@ -46,14 +46,15 @@ class MqttHandler {
     generateKML() {
         let root = XMLBuilder.create('kml');
         root.att('xmlns', "http://www.opengis.net/kml/2.2");
+        let document = root.ele("Document");
         
         this.drone_sensor_json.forEach(function(item, index) {
             console.log(index);
-            let placemark = root.ele("Placemark");
+            let placemark = document.ele("Placemark");
             placemark.ele("name", index);
 
             let point = placemark.ele("Point");
-            point.ele("coordinates", item['gps']['coordinates'][0] + "," + item['gps']['coordinates'][1] + ",0");
+            point.ele("coordinates", item['gps']['coordinates'][1] + "," + item['gps']['coordinates'][0] + ",0");
         });
         
         return root.end({pretty: true});

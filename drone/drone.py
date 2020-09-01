@@ -41,10 +41,10 @@ def main():
     parser.add_argument('--ip', help='IP of the MQTT broker', required=True)
     parser.add_argument('--port', help='Port of the MQTT broker', type=int, default=1883)
     parser.add_argument('--freq', help='Update frequency, in milliseconds', type=int, default=1000)
-    parser.add_argument('--lon', help='Starting longitude', type=float, default=46.067012)
-    parser.add_argument('--lat', help='Starting latitude', type=float, default=11.150448)
-    parser.add_argument('--lon_end', help='Target longitude', type=float, default=45.893944)
-    parser.add_argument('--lat_end', help='Target latitude', type=float, default=11.043585)
+    parser.add_argument('--lat', help='Starting latitude', type=float, default=46.067012)
+    parser.add_argument('--lon', help='Starting longitude', type=float, default=11.150448)
+    parser.add_argument('--lat_end', help='Target latitude', type=float, default=45.893944)
+    parser.add_argument('--lon_end', help='Target longitude', type=float, default=11.043585)
     parser.add_argument('--n_pos', help='Number of sampled positions between start and target positions', 
         type=int, default=20)
     parser.add_argument('--debug', help="Debug mode. Print extra informations", action='store_true')
@@ -70,7 +70,7 @@ def main():
     Build GPS and wheater generators
     '''
     # Create the GPS data generator
-    gps_generator = GPSGenerator([args.lon, args.lat], [args.lon_end, args.lat_end], args.n_pos)
+    gps_generator = GPSGenerator([args.lat, args.lon], [args.lat_end, args.lon_end], args.n_pos)
 
     # Create the weather data generator
     weather_generator = WeatherGenerator()
