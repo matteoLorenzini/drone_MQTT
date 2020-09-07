@@ -49,3 +49,5 @@ h1  --10Mbps--  s1  --10Mbps--  s2  --10Mbps--  h2
     docker cp srv4:/root/trajectory.kml .
     ```
     Finally, you can move it to a folder shared between the ComnetsEmu VM and the host operating system. This allows you to visualise nicely the trajetory in the Google Earth application. 
+    
+    ![image](2.png)
