@@ -7,7 +7,7 @@ class MqttHandler {
         this.mqttClient = null;
         this.host = 'http://10.0.0.1:1883';
         
-        this.drone_sensor_json = [];        // ['gps': {'type': string, 'coordinates': [float, float]}, 'wind': float, 'temp' : float]        
+        this.drone_sensor_json = [];        // ['gps': {'type': string, 'coordinates': [float, float]}, 'wind': float, 'temperature' : float]        
     }
 
     connect() {
@@ -52,6 +52,7 @@ class MqttHandler {
             console.log(index);
             let placemark = document.ele("Placemark");
             placemark.ele("name", index);
+            placemark.ele("description", "Temperature: " + item['temperature'] + " C°. Wind: " + item['wind'] + " m/s.");
 
             let point = placemark.ele("Point");
             point.ele("coordinates", item['gps']['coordinates'][1] + "," + item['gps']['coordinates'][0] + ",0");

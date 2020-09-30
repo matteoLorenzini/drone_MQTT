@@ -13,7 +13,7 @@ class WeatherGenerator:
             Paramenters:
                 interval ([float, float]) :  Sample a value in this interval   
         ''' 
-        return uniform(interval[0], interval[1])
+        return round(uniform(interval[0], interval[1]), 3)
     
     def measure_temperature (self, interval):
         ''' Simulate a temperature measurement (Celsius). 
@@ -21,4 +21,4 @@ class WeatherGenerator:
             Paramenters:
                 interval ([float, float]) :  Sample a value in this interval   
         '''
-        return uniform(interval[0], interval[1])
+        return round(uniform(interval[0], interval[1]), 3)
